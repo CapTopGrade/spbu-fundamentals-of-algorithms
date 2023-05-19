@@ -3,21 +3,25 @@ from numpy.typing import NDArray
 
 
 def lu(A: NDArray, permute: bool) -> tuple[NDArray, NDArray, NDArray]:
-    n = len(A)
+    n = A.shape[0]
     L = np.eye(n)
-    P = np.eye(n)
     U = A.copy()
+    P = np.eye(n)
 
-    for j in range(n):
-        row = max(range(j, n), key=lambda i: abs(U[i, j]))
+    for k in range(n - 1):
+        pivot = np.argmax(np.abs(U[k:, k])) + k
 
-        if j != row:
-            P[[j, row]] = P[[row, j]]
-            L[[j, row], :j] = L[[row, j], :j]
-            U[[j, row], :] = U[[row, j], :]
+        U[[k, pivot], k:] = U[[pivot, k], k:]
+        P[[k, pivot], :] = P[[pivot, k], :]
 
-        L[j:, j] = U[j:, j] / U[j, j]
-        U[j + 1:, j:] -= L[j + 1:, j, np.newaxis] * U[j, j:]
+        if k > 0:
+            L[[k, pivot], :k] = L[[pivot, k], :k]
+
+        multipliers = U[k + 1:, k] / U[k, k]
+
+
+        L[k + 1:, k] = multipliers
+        U[k + 1:, k:] -= np.outer(multipliers, U[k, k:])
 
     return L, U, P
 
