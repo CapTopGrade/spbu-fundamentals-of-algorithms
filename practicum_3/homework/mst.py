@@ -7,13 +7,27 @@ from src.plotting import plot_graph
 
 
 def prim_mst(G: nx.Graph, start_node="0") -> set[tuple[Any, Any]]:
-    mst_set = set()  # set of nodes included into MST
-    rest_set = set(G.nodes())  # set of nodes not yet included into MST
-    mst_edges = set()  # set of edges constituting MST
+    mst_set = set()
+    rest_set = set(G.nodes())
+    mst_edges = set()
+    heap = []
 
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
+    mst_set.add(start_node)
+    rest_set.remove(start_node)
+
+    for edge in G.edges(start_node, data=True):
+        heapq.heappush(heap, (edge[2]['weight'], (edge[0], edge[1])))
+
+    while heap:
+        min_edge = heapq.heappop(heap)
+        min_edge_nodes = min_edge[1]
+        if min_edge_nodes[0] in mst_set and min_edge_nodes[1] in mst_set:
+            continue
+        mst_set.update(min_edge_nodes)
+        mst_edges.add(min_edge_nodes)
+        for edge in G.edges(min_edge_nodes[1], data=True):
+            if edge[1] not in mst_set:
+                heapq.heappush(heap, (edge[2]['weight'], (edge[0], edge[1])))
 
     return mst_edges
 
