@@ -6,10 +6,12 @@ import numpy as np
 
 def time_taken(tickets: list[int], k: int) -> int:
     seconds_elapsed = 0
-
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
+    n = len(tickets)
+    while tickets[k] > 0:
+        for i in range(n):
+            if tickets[i] > 0:
+                tickets[i] -= 1
+                seconds_elapsed += 1
 
     return seconds_elapsed
 
