@@ -12,18 +12,29 @@ def visit(node: Any):
 
 def dfs_iterative(G: nx.Graph, node: Any):
     visited = {n: False for n in G}
+    stack = [node]
 
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
+    while stack:
+        curr_node = stack.pop()
+        if not visited[curr_node]:
+            visited[curr_node] = True
+            visit(curr_node)
+            for neighbor in G.neighbors(curr_node):
+                if not visited[neighbor]:
+                    stack.append(neighbor)
 
 
 def topological_sort(G: nx.DiGraph, node: Any):
     visited = {n: False for n in G}
+    stack = []
 
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
+    def dfs(node):
+        visited[node] = True
+        for neighbor in G.neighbors(node):
+            if not visited[neighbor]:
+                dfs(neighbor)
+        stack.append(node)
+
 
 
 if __name__ == "__main__":
