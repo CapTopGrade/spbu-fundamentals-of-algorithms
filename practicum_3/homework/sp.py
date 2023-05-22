@@ -6,11 +6,16 @@ from src.plotting import plot_graph
 
 
 def dijkstra_sp(G: nx.Graph, source_node="0") -> dict[Any, list[Any]]:
-    shortest_paths = {}  # key = destination node, value = list of intermediate nodes
+    shortest_paths = {}
+    heap = [(0, source_node, [])]  # priority queue of (distance, node, path)
 
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
+    while heap:
+        (dist, node, path) = heapq.heappop(heap)
+        if node not in shortest_paths:
+            shortest_paths[node] = path + [node]
+            for next_node, edge_data in G[node].items():
+                distance = edge_data['weight']
+                heapq.heappush(heap, (dist + distance, next_node, shortest_paths[node]))
 
     return shortest_paths
 
