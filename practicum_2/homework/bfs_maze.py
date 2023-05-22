@@ -37,15 +37,25 @@ class Maze:
 
 
 def solve(maze: Maze) -> None:
-    path = ""  # solution as a string made of "L", "R", "U", "D"
-
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
-
-    print(f"Found: {path}")
-    maze.print(path)
-
+    queue = deque([(0, maze.start_j, "")])
+    visited = set()
+    while queue:
+        i, j, path = queue.popleft()
+        if maze.list_view[i][j] == "X":
+            print(f"Found: {path}")
+            maze.print(path)
+            return
+        if (i, j) in visited:
+            continue
+        visited.add((i, j))
+        for move in ["L", "R", "U", "D"]:
+            new_i, new_j = _shift_coordinate(i, j, move)
+            if new_i < 0 or new_i >= len(maze.list_view) or new_j < 0 or new_j >= len(maze.list_view[0]):
+                continue
+            if maze.list_view[new_i][new_j] == "#":
+                continue
+            queue.append((new_i, new_j, path + move))
+    print("No path found")
 
 def _shift_coordinate(i: int, j: int, move: str) -> tuple[int, int]:
     if move == "L":
